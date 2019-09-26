@@ -1,11 +1,22 @@
 
+class AdTech_Heatmap
+{
+  constructor(map_id)
+  {
+    this.map_id = map_id
+  }
+
+  build_map()
+  {
+    var layer = new L.StamenTileLayer("toner");
+    var mymap = L.map('mapid').setView([37.4, -97], 4);
+    mymap.addLayer(layer);
+  }
+
+}
 
 
-
-
-console.log( 'Hello, world!' );
-
-document.write('Hello World')
+document.write('Hello World');
 
 
 
@@ -17,13 +28,10 @@ function my_add(x, y)
 }
 
 
-function build_map()
+function _build_map()
 {
   var layer = new L.StamenTileLayer("toner");
-  var mymap = new L.Map("mapid", {
-      center: new L.LatLng(39, -97),
-      zoom: 4
-  });
+  var mymap = L.map('mapid').setView([39, -97], 4);
   mymap.addLayer(layer);
 
 
@@ -37,5 +45,5 @@ function build_map()
   //		id: 'mapbox.streets'
   //	}).addTo(mymap);
 
-  return mymap;
+  //return mymap;
 }
