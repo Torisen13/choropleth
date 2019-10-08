@@ -71,8 +71,6 @@ class AdTech_Heatmap
         console.log("This isn't where I parked my car!");
     }
   }
-
-
 }
 
 
