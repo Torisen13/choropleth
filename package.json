@@ -1,0 +1,25 @@
+{
+  "name": "adtech_heatmap",
+  "version": "1.0.0",
+  "description": "",
+  "main": "back_server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WeatherFX/AdTech_Heatmap.git"
+  },
+  "author": "Jeremy Ryan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/WeatherFX/AdTech_Heatmap/issues"
+  },
+  "homepage": "https://github.com/WeatherFX/AdTech_Heatmap#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "*",
+    "geojson": "^0.5.0",
+    "mysql": "^2.17.1"
+  }
+}

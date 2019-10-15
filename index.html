@@ -11,11 +11,28 @@
         crossorigin="">
       </script>
       <script type="text/javascript" src="http://maps.stamen.com/js/tile.stamen.js?v1.3.0"></script>
+
       <script type="text/javascript" src="AdTech_Heatmap.js"></script>
 
   </head>
 
 <body>
+  <div class=”container”>
+ <br>
+ <div class=”jumbotron”>
+ <h1 class="display-4">Send Message</h1>
+ <br>
+ <input id = “name” class=”form-control” placeholder=”Name”>
+ <br>
+ <textarea id = “message” class=”form-control” placeholder="Your Message Here">
+</textarea>
+ <br>
+ <button id=”send” class=”btn btn-success”>Send</button>
+ </div>
+ <div id=”messages”>
+
+</div>
+</div>
 
   <div id="mapid" style="width: 800px; height: 500px;"></div>
 
@@ -48,14 +65,15 @@
     let race = "all";                       //All all white (wh), black (bl), asian (as), hispanic (hi)
     let age = ["0"];                        //All age groups
     let year = "11";                        //2018
-    let state = ["01", "28", "13", "47"];   //States Alabama Georgia Mississippi Tennessee
+    let state = ["Alabama", "Mississippi", "Georgia", "Tennessee"];   //States Alabama Georgia Mississippi Tennessee
 
-    request1.push(data_set);
-    request1.push(sex+race);
-    request1.push(year);
-    request1.push(age);
+
     request1.push(state);
-    console.log(request1);
+    request1.push(age);
+    request1.push(year);
+    request1.push(sex+race);
+    request1.push(data_set);
+    //console.log(request1);
 
     let request2 = [];
     data_set = "pop_county";            //Population by county
@@ -63,23 +81,27 @@
     race = "hi";                        //All all white (wh), black (bl), asian (as), hispanic (hi)
     age = ["5", "6"];                   //All age groups
     year = "11";                        //2018
-    state = ["01", "28", "13", "47"];   //States Alabama Georgia Mississippi Tennessee
+    state = ["Alabama", "Mississippi", "Georgia", "Tennessee"];   //States Alabama Georgia Mississippi Tennessee
 
-    request2.push(data_set);
-    request2.push(sex+race);
-    request2.push(year);
-    request2.push(age);
+
     request2.push(state);
-    console.log(request2);
+    request2.push(age);
+    request2.push(year);
+    request2.push(sex+race);
+    request2.push(data_set);
+    //console.log(request2);
 
 
+    let my_map = new AdTech_Heatmap('mapid', atl_zips);
 
-
-
-    let my_map = new AdTech_Heatmap(mapid, atl_zips);
-    my_map.add_choropleth_layer(request1);
+    //server communication
     my_map.add_choropleth_layer(request2);
-    my_map.build_map();
+
+
+    //
+    //my_map.add_choropleth_layer(request1);
+    //my_map.add_choropleth_layer(request2);
+    //my_map.build_map();
   </script>
 
 

@@ -1,102 +1,126 @@
-
 class AdTech_Heatmap
 {
   constructor(map_id, zip_list)
   {
-    this.map_id = map_id
-    this.zip_list = zip_list
+    this.map = L.map(map_id).setView([37.4, -97], 4);
+    this.map_id = map_id;
+    this.zip_list = zip_list;
+    this.build_map();
   }
 
   build_map()
   {
     let layer = new L.StamenTileLayer("toner");
-    let mymap = L.map('mapid').setView([37.4, -97], 4);
-    mymap.addLayer(layer);
+    this.map.addLayer(layer);
   }
 
-  add_choropleth_layer(request)
+  add_shape_layer(request)
   {
-    let getPopData = function(demo)
-    {
-      const column_name = {
-        'ball': 'CAST(SUM(TOT_POP) AS SIGNED) AS TOT_POP',
-        'fall': 'CAST(SUM(TOT_FEMALE) AS SIGNED) AS TOT_FEMALE',
-        'mall': 'CAST(SUM(TOT_MALE) AS SIGNED) AS TOT_MALE',
-        'bwh': 'CAST(SUM(WAC_FEMALE) AS SIGNED) + CAST(SUM(WAC_MALE) AS SIGNED) AS WAC_BOTH',
-        'fwh': 'CAST(SUM(WAC_FEMALE) AS SIGNED) AS WAC_FEMALE',
-        'mwh': 'CAST(SUM(WAC_MALE) AS SIGNED) AS WAC_MALE',
-        'bbl': 'CAST(SUM(BAC_FEMALE) AS SIGNED) + CAST(SUM(BAC_MALE) AS SIGNED) AS BAC_BOTH',
-        'fbl': 'CAST(SUM(BAC_FEMALE) AS SIGNED) AS BAC_FEMALE',
-        'mbl': 'CAST(SUM(BAC_MALE) AS SIGNED) AS BAC_MALE',
-        'bas': 'CAST(SUM(AAC_FEMALE) AS SIGNED) + CAST(SUM(AAC_MALE) AS SIGNED) AS AAC_BOTH',
-        'fas': 'CAST(SUM(AAC_FEMALE) AS SIGNED) AS AAC_FEMALE',
-        'mas': 'CAST(SUM(AAC_MALE) AS SIGNED) AS AAC_MALE',
-        'bhi': 'CAST(SUM(H_FEMALE) AS SIGNED) + CAST(SUM(H_MALE) AS SIGNED) AS H_BOTH',
-        'fhi': 'CAST(SUM(H_FEMALE) AS SIGNED) AS H_FEMALE',
-        'mhi': 'CAST(SUM(H_MALE) AS SIGNED) AS H_MALE'
-      };
-      return column_name[demo];
-    }
 
-    console.log("Working on new choropleth\n");
-    let data_set = request.shift();
-    let query = "";
-
-    switch(data_set)
-    {
-      case "pop_county":
-        console.log("Using census_info.county_pop_est");
-        let demo = request.shift();
-        let gen_race = getPopData(demo);
-        console.log(gen_race);
-        let name = getName(gen_race);
-        console.log(gen_race);
-        console.log(name);
-        let where_state =  multGen("STATE", request.pop());
-        console.log(where_state);
-        let where_age = multGen("AGEGRP", request.pop());
-        console.log(where_age);
-        query = `SELECT CONCAT(state, county) AS GEOID, ${gen_race}
-        FROM census_info.county_pop_est
-        WHERE ${where_state} AND ${where_age} AND ${request[0]}
-        GROUP BY GEOID;`;
-        console.log(query);
-
-        break;
-
-      case "2":
-        break;
-
-      default:
-        console.log("This isn't where I parked my car!");
-    }
   }
-}
 
-
-function getName(words)
-{
-  var n = words.split(" ");
-  return n.pop();
-}
-
-
-function multGen(header, values)
-{
-  ret = "(";
-  for(value of values)
+  add_zip_list_layer(request)
   {
-    ret = `${ret}${header}=${value} OR `;
+
   }
-  ret = ret.slice(0, -4) + ")";
-  return ret;
+
+  async add_choropleth_layer(request)
+  {
+    const data = await requestData(this.map, request)
+
+    //there is a more elagent way of doing these...
+    let max = -10000000;
+    for (var i=0 ; i<data.features.length ; i++) {
+        max = Math.max(parseInt(data.features[i]["properties"]['POP']), max);
+    }
+    console.log('max: '+max);
+
+    let min = 10000000;
+    for (var i=0 ; i<data.features.length ; i++) {
+        min = Math.min(parseInt(data.features[i]["properties"]['POP']), min);
+    }
+    console.log('min: '+min);
+
+
+
+
+    
+  }
 }
 
-function _build_map()
+//Live version of the data request function
+//uses async/await with fetch to make the http call
+//compatability issues may arise since this language is not supported in older browsers
+//solutions include using bable or XMLHttpRequest
+async function requestData(leafletMap, request)
 {
-  let layer = new L.StamenTileLayer("toner");
-  let mymap = L.map('mapid').setView([39, -97], 4);
-  mymap.addLayer(layer);
+  let url = "http://10.0.2.15:3000/" + request.pop();
+  const data = JSON.stringify({
+    "sexrace": request.pop(),
+    "year": request.pop(),
+    "age": request.pop(),
+    "state": request.pop()
+  });
+
+  const fetch_opts = {
+    method: "POST",
+    headers: {'Content-Type': 'application/json'},
+    body: data
+  };
+
+  let req_data = await fetch(url, fetch_opts);
+  req_data = await req_data.json();
+  return req_data;
+}
+
+//Stub of a function to retrive the SQL data from backend
+//it just requests and displays it does not return
+//if browser compatability issues arise this will be a good canidate
+function _requestData(mapid, request)
+{
+  let xhr = new XMLHttpRequest();
+  let url = "http://10.0.2.15:3000/" + request.pop();
+  xhr.open("POST", url, true);
+  xhr.setRequestHeader("Content-Type", "application/json");
+  xhr.onreadystatechange = function () {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+          let json = JSON.parse(xhr.responseText);
+          console.log(json.State + ", " + json.County + ", " + json.geometry);
+      }
+  };
+  var data = JSON.stringify({
+    "sexrace": request.pop(),
+    "year": request.pop(),
+    "age": request.pop(),
+    "state": request.pop()
+  });
+  xhr.send(data);
+}
+
+
+
+
+
+
+/* test code for making shapes only show at certin zoom lvls
+var shelter1 = L.marker([55.08, 11.62], {icon: shelterIcon});
+
+var shelterMarkers = new L.FeatureGroup();
+
+shelterMarkers.addLayer(shelter1);
+
+map.on('zoomend', function() {
+    if (map.getZoom() <7){
+            map.removeLayer(shelterMarkers);
+    }
+    else {
+            map.addLayer(shelterMarkers);
+        }
+});
+*/
+
+
+
 
 
   //Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.
@@ -110,19 +134,3 @@ function _build_map()
   //	}).addTo(mymap);
 
   //return mymap;
-}
-
-/*
-SELECT
-    CONCAT(state, county) AS GEOID,
-    CAST(SUM(H_FEMALE) AS SIGNED) AS H_FEMALE,
-    CAST(SUM(H_MALE) AS SIGNED) AS H_MALE,
-    CAST(SUM(H_FEMALE) AS SIGNED) + CAST(SUM(H_MALE) AS SIGNED) AS H_BOTH
-FROM
-    census_info.county_pop_est
-WHERE
-    (STATE = 47 OR STATE = 01 OR STATE = 28
-        OR STATE = 13)
-      AND YEAR = 11
-      AND (AGEGRP = 5 OR AGEGRP = 6)
-GROUP BY GEOID;'*/
