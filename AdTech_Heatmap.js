@@ -8,25 +8,31 @@ class AdTech_Heatmap
     this.build_map();
   }
 
+  //method for displaying the basic map
   build_map()
   {
     let layer = new L.StamenTileLayer("toner");
     this.map.addLayer(layer);
   }
 
+  //method for adding in a new shape layer zip codes cong. dist etc.
   add_shape_layer(request)
   {
 
   }
 
+  //method for adding a zip list layer
   add_zip_list_layer(request)
   {
 
   }
 
+  //method for adding in a new choropleth layer
+  //@param request is an array consisting of:
+  // request = [[state1, state2, ..], [age1, age2, ..], year, sex+race, data_set]
   async add_choropleth_layer(request)
   {
-    const data = await requestData(this.map, request)
+    const data = await requestData(request)
 
     //there is a more elagent way of doing these...
     let max = -10000000;
@@ -44,15 +50,18 @@ class AdTech_Heatmap
 
 
 
-    
+
   }
 }
+
+//may need an object that resolves strings to function pointers
 
 //Live version of the data request function
 //uses async/await with fetch to make the http call
 //compatability issues may arise since this language is not supported in older browsers
 //solutions include using bable or XMLHttpRequest
-async function requestData(leafletMap, request)
+//@param request the same request as above
+async function requestData(request)
 {
   let url = "http://10.0.2.15:3000/" + request.pop();
   const data = JSON.stringify({

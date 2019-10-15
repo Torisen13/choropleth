@@ -4,7 +4,7 @@ const tools = require('../resources/tools');
 
 var appRouter = function (app, con) {
 
-
+//handles get requests to "domain/pop_county"
  app.get("/pop_county", function (req, res) {
    var data = ({
      Population: 1100889,
@@ -16,6 +16,8 @@ var appRouter = function (app, con) {
    res.status(200).send(data);
  });
 
+//handles post request to "domain/pop_county"
+//this makes the SQL query and calls it then returns the table
  app.post("/pop_county", function (req, res) {
 
    //start building out my reply
@@ -39,7 +41,7 @@ var appRouter = function (app, con) {
 
 module.exports = appRouter;
 
-
+//helper function that builds the population query
 function pop_build_query(request)
 {
   //get the type of population requested
@@ -105,13 +107,15 @@ ON f.GEOID = s.GEOID;`;
   return query_string;
 }
 
+//helper function that returns the last word in a string
 function getName(words)
 {
   var n = words.split(" ");
   return n.pop();
 }
 
-
+//helper function that will break down an array and return a string with
+//each element of the array chained together with ORs
 function multGen(header, values, conversion)
 {
   ret = "(";

@@ -1,6 +1,8 @@
 //Helper objects for look ups and valu changes
 
 
+
+//helper functions that converts or ensurs that input is validated before making the SQL query
 module.exports =
 {
   getPopData: (demo) =>
