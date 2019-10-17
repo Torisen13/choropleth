@@ -1,4 +1,5 @@
 const mysql = require('mysql');
+const wk = require('wellknown');
 const GeoJSON = require('geojson');
 const tools = require('../resources/tools');
 
@@ -32,11 +33,40 @@ var appRouter = function (app, con) {
      }
      let test = GeoJSON.parse(rows, {Polygon: "GEOMETRY"});
      console.log('Data received from Db:\n');
-     console.log(test.features[0]);
+     for(var i=0; i<test.features.length; i++)
+     {
+       test.features[i].geometry = wk.parse(test.features[i].geometry.coordinates);
+     }
      //console.log(test.features[0].geometry.coordinates);
      res.status(200).send(test);
    });
  });
+
+
+//handles post request to "domain/pop_county"
+//this makes the SQL query and calls it then returns the table
+app.post("/zip_codes", function (req, res) {
+
+  //start building out my reply
+  //Building SQL request query
+  query_string = pop_build_query(req.body);
+
+  con.query(query_string, (err,rows) => {
+    if(err)
+    {
+      res.status(500).send(err);
+      throw err;
+    }
+    let test = GeoJSON.parse(rows, {Polygon: "GEOMETRY"});
+    console.log('Data received from Db:\n');
+    for(var i=0; i<test.features.length; i++)
+    {
+      test.features[i].geometry = wk.parse(test.features[i].geometry.coordinates);
+    }
+    //console.log(test.features[0].geometry.coordinates);
+    res.status(200).send(test);
+  });
+});
 }
 
 module.exports = appRouter;

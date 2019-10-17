@@ -16,8 +16,22 @@ class AdTech_Heatmap
   }
 
   //method for adding in a new shape layer zip codes cong. dist etc.
-  add_shape_layer(request)
+  async add_shape_layer(request)
   {
+    let url = "http://10.0.2.15:3000/" + request;
+    console.log(url);
+    //let shp_data = await requestData(request);
+
+    function style(feature)
+    {
+  		return {
+  			weight: 1,
+  			opacity: 1,
+  			color: '00000000',
+  			fillOpacity: 0.7,
+  			fillColor: fillFunction(feature.properties.POP)
+	    };
+    }
 
   }
 
@@ -32,26 +46,60 @@ class AdTech_Heatmap
   // request = [[state1, state2, ..], [age1, age2, ..], year, sex+race, data_set]
   async add_choropleth_layer(request)
   {
-    const data = await requestData(request)
+    let url = "http://10.0.2.15:3000/" + request.pop();
+    let pleth_data = JSON.stringify({
+      "sexrace": request.pop(),
+      "year": request.pop(),
+      "age": request.pop(),
+      "state": request.pop()
+    });
+    const data = await requestData(url, pleth_data);
 
     //there is a more elagent way of doing these...
     let max = -10000000;
     for (var i=0 ; i<data.features.length ; i++) {
         max = Math.max(parseInt(data.features[i]["properties"]['POP']), max);
     }
-    console.log('max: '+max);
 
     let min = 10000000;
     for (var i=0 ; i<data.features.length ; i++) {
         min = Math.min(parseInt(data.features[i]["properties"]['POP']), min);
     }
-    console.log('min: '+min);
+
+    let fillFunction = getFillColor(min, max);
+
+    function style(feature)
+    {
+  		return {
+  			weight: 1,
+  			opacity: 1,
+  			color: '00000000',
+  			fillOpacity: 0.7,
+  			fillColor: fillFunction(feature.properties.POP)
+	    };
+    }
+
+    var choropleth = L.geoJson(data, {style: style,}).addTo(this.map);
 
 
 
 
 
   }
+}
+
+function getFillColor(min, max)
+{
+  interval = Math.floor((max-min)/5);
+
+  return (x) =>
+    {return   x > interval*4 ? '#bd0026' :
+             x > interval*3 ? '#f03b20' :
+             x > interval*2 ? '#fd8d3c' :
+             x > interval   ? '#fecc5c' :
+						 x > 0          ? '#ffffb2' :
+                 							'#ffffff';
+    };
 }
 
 //may need an object that resolves strings to function pointers
@@ -61,15 +109,8 @@ class AdTech_Heatmap
 //compatability issues may arise since this language is not supported in older browsers
 //solutions include using bable or XMLHttpRequest
 //@param request the same request as above
-async function requestData(request)
+async function requestData(url, data)
 {
-  let url = "http://10.0.2.15:3000/" + request.pop();
-  const data = JSON.stringify({
-    "sexrace": request.pop(),
-    "year": request.pop(),
-    "age": request.pop(),
-    "state": request.pop()
-  });
 
   const fetch_opts = {
     method: "POST",

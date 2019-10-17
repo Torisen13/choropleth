@@ -82,6 +82,7 @@
     age = ["5", "6"];                   //All age groups
     year = "11";                        //2018
     state = ["Alabama", "Mississippi", "Georgia", "Tennessee"];   //States Alabama Georgia Mississippi Tennessee
+    //state = ["Georgia"]; //California
 
 
     request2.push(state);
@@ -95,7 +96,8 @@
     let my_map = new AdTech_Heatmap('mapid', atl_zips);
 
     //server communication
-    my_map.add_choropleth_layer(request2);
+    my_map.add_choropleth_layer(request1);
+    my_map.add_shape_layer("zip_codes")
 
 
     //
