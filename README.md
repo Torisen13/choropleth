@@ -28,11 +28,12 @@ resize/generalize geometry with mapshaper.org if needed
 Uploading Shape/geometry to mysql:
 
   In mysql-workbench:
+  
     Go to the database you want to add the shape data into
     Right click
     Select Load Spatial Data
     Follow the wizard
-    
+
 Upload CSV Data to mysql:
   Ensure your table is already set up with the proper column headers
   On command line:
