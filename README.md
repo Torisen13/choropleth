@@ -1,4 +1,4 @@
-# AdTech_Heatmap
+# Choropleth
 
 A web app that demos the ability to overlay a heatmap/choropleth visualizing
 population, demographic, or or other data with a geo-spatial relationship.
