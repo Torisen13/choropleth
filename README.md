@@ -36,8 +36,8 @@ Upload CSV Data to mysql:
   On command line:
     Start mysql command line inside of the directory you have downloaded the CSV
     Enter these commands:
-      SET GLOBAL local_infile = 1;
 
+      SET GLOBAL local_infile = 1;
       load data local infile 'SAMPLEDATANAME.csv'
       into table county_pop_est
       fields terminated by ','
