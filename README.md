@@ -7,11 +7,11 @@ This demo was created on Ubuntu 18
 
 Requirements:
 
-      mysql,
-      mysql-server,
-      mysql-workbench-communities,
-      nodejs,
-      npm,
+      mysql
+      mysql-server
+      mysql-workbench-communities
+      nodejs
+      npm
 
 Data:
 
