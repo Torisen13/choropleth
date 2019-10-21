@@ -4,12 +4,14 @@ A web app that demos the ability to overlay a heatmap/choropleth visualizing
 population, demographic, or or other data with a geo-spatial relationship.
 
 This demo was created on Ubuntu 18
+
 Requirements:
-mysql
-mysql-server
-mysql-workbench-communities
-nodejs
-npm
+
+  mysql
+  mysql-server
+  mysql-workbench-communities
+  nodejs
+  npm
 
 Data:
 Pop Data by County:  
@@ -28,7 +30,7 @@ resize/generalize geometry with mapshaper.org if needed
 Uploading Shape/geometry to mysql:
 
   In mysql-workbench:
-  
+
     Go to the database you want to add the shape data into
     Right click
     Select Load Spatial Data
