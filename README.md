@@ -44,8 +44,8 @@ Upload CSV Data to mysql:
   Ensure your table is already set up with the proper column headers
   On command line:
 
-      Start mysql command line inside of the directory you have downloaded the CSV
-      Enter these commands:
+    Start mysql command line inside of the directory you have downloaded the CSV
+    Enter these commands:
 
       SET GLOBAL local_infile = 1;
       load data local infile 'SAMPLEDATANAME.csv'
