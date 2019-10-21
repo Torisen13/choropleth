@@ -14,15 +14,18 @@ Requirements:
       npm,
 
 Data:
+
 Pop Data by County:  
+
 Mysql Table Name: county_pop_est
 
-https://www2.census.gov/programs-surveys/popest/datasets/2010-2018/counties/asrh/cc-est2018-alldata.csv
+        https://www2.census.gov/programs-surveys/popest/datasets/2010-2018/counties/asrh/cc-est2018-alldata.csv
 
-County Shape File:  
+County Shape File:
+
 Mysql Table Name: county_shp
 
-https://www2.census.gov/programs-surveys/popest/datasets/2010-2018/counties/asrh/cc-est2018-alldata.csv
+        https://www2.census.gov/programs-surveys/popest/datasets/2010-2018/counties/asrh/cc-est2018-alldata.csv
 
 resize/generalize geometry with mapshaper.org if needed
 
