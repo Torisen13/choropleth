@@ -44,7 +44,7 @@ Upload CSV Data to mysql:
       lines terminated by '\n'
       ignore 1 lines;
 
-    This method appeared to be much faster than doing it through mysql-workbench gui
+  This method appeared to be much faster than doing it through mysql-workbench gui
 
 Clone this github and go to the directory
 inside the directory use
