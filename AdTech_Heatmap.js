@@ -18,24 +18,45 @@ class AdTech_Heatmap
   //method for adding in a new shape layer zip codes cong. dist etc.
   async add_shape_layer(request)
   {
-    let url = "http://10.0.2.15:3000/" + request;
-    console.log(url);
-    //let shp_data = await requestData(request);
+    let url = "http://10.0.2.15:3000/" + request.pop();
+    let st_data = JSON.stringify({
+      "state": request.pop(),
+      "test": 'test'
+    });
+    let shp_data = await requestData(url, st_data);
+    console.log(shp_data);
+
+    let highlight = getLineColor(this.zip_list);
 
     function style(feature)
     {
   		return {
   			weight: 1,
   			opacity: 1,
-  			color: '00000000',
+  			color: highlight(feature.properties.ZIP),
   			fillOpacity: 0.7,
-  			fillColor: fillFunction(feature.properties.POP)
+  			fillColor: '#00000000'
 	    };
     }
 
+    let zips = L.geoJson(shp_data, {style: style,});
+
+    let zip_map = new L.FeatureGroup();
+
+    zip_map.addLayer(zips);
+
+    this.map.on('zoomend', function() {
+        if (this.getZoom() <9){
+                this.removeLayer(zip_map);
+        }
+        else {
+                this.addLayer(zip_map);
+            }
+    });
+
   }
 
-  //method for adding a zip list layer
+  //method for adding a zip list layethis.r
   add_zip_list_layer(request)
   {
 
@@ -54,6 +75,7 @@ class AdTech_Heatmap
       "state": request.pop()
     });
     const data = await requestData(url, pleth_data);
+    console.log(data);
 
     //there is a more elagent way of doing these...
     let max = -10000000;
@@ -74,17 +96,12 @@ class AdTech_Heatmap
   			weight: 1,
   			opacity: 1,
   			color: '00000000',
-  			fillOpacity: 0.7,
+  			fillOpacity: 0.5,
   			fillColor: fillFunction(feature.properties.POP)
 	    };
     }
 
     var choropleth = L.geoJson(data, {style: style,}).addTo(this.map);
-
-
-
-
-
   }
 }
 
@@ -100,6 +117,20 @@ function getFillColor(min, max)
 						 x > 0          ? '#ffffb2' :
                  							'#ffffff';
     };
+}
+
+
+
+function getLineColor(list)
+{
+  return (x) =>
+    {
+      if(list.includes(x))
+      {
+        return 'blue';
+      }
+      return '#696969';
+    }
 }
 
 //may need an object that resolves strings to function pointers

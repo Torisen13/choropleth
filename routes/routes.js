@@ -49,8 +49,7 @@ app.post("/zip_codes", function (req, res) {
 
   //start building out my reply
   //Building SQL request query
-  query_string = pop_build_query(req.body);
-
+  query_string = zip_build_query(req.body);
   con.query(query_string, (err,rows) => {
     if(err)
     {
@@ -63,7 +62,6 @@ app.post("/zip_codes", function (req, res) {
     {
       test.features[i].geometry = wk.parse(test.features[i].geometry.coordinates);
     }
-    //console.log(test.features[0].geometry.coordinates);
     res.status(200).send(test);
   });
 });
@@ -161,4 +159,19 @@ function multGen(header, values, conversion)
   }
   ret = ret.slice(0, -4) + ")";
   return ret;
+}
+
+function zip_build_query(request)
+{
+  let query_string =
+  `SELECT *
+FROM census_info.us_zip_rel
+WHERE(
+		STATE=01 OR
+		STATE=28 OR
+		STATE=13 OR
+		STATE=47
+	);`;
+
+return query_string;
 }

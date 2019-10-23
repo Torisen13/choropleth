@@ -92,12 +92,19 @@
     request2.push(data_set);
     //console.log(request2);
 
+    let list = ['35005', '35020', '35022', '35023', '35061', '35064', '35068',
+                '35094', '35117', '35118', '35126', '35127', '35130', '35173',
+                '35203', '35204', '35205', '35206', '35207', '35208', '35209',
+                '35210', '35211', '35212', '35213', '35214', '35215', '35217',
+                '35218', '35221', '35222', '35223', '35224', '35226', '35228',
+                '35233', '35234', '35235', '35242', '35243', '35254'];
 
-    let my_map = new AdTech_Heatmap('mapid', atl_zips);
+
+    let my_map = new AdTech_Heatmap('mapid', list);
 
     //server communication
     my_map.add_choropleth_layer(request1);
-    my_map.add_shape_layer("zip_codes")
+    my_map.add_shape_layer([state, "zip_codes"])
 
 
     //
